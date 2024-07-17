@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 function toggleMobileMenu(){
     const menu =  document.getElementById("menu");
     menu.classList.toggle("hidden")
@@ -6,7 +7,7 @@ function toggleMobileMenu(){
 }
 function Header() {
   return (
-    <div className="header flex relative justify-between items-center">
+    <div className="header flex relative justify-between items-center mb-8 md:mb-14">
       <a
         href="#"
         className="logo-holder flex items-center justify-center gap-2"
@@ -19,10 +20,10 @@ function Header() {
       <nav>
         <ul id="menu" className="absolute right-0 top-8 text-lg hidden flex-col justify-center items-end gap-4 sm:flex sm:top-0 sm:flex-row sm:gap-16 sm:items-center">
           <li>
-            <a href="#">Home</a>
+            <Link to='/'>Home</Link>
           </li>
           <li>
-            <a href="#books">Books</a>
+           <Link to='/books'>Books</Link>
           </li>
           <li>
             <a href="#categories">Categories</a>

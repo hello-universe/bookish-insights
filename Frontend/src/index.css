@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add this to your global CSS file */
+.truncate-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit the text to 2 lines */
+  line-clamp: 2; /* Standard property (future compatibility) */
+  -webkit-box-orient: vertical;
+  box-orient: vertical; /* Standard property (future compatibility) */
+  overflow: hidden;
+}
+
