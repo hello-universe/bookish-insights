@@ -28,6 +28,20 @@ function Header() {
           <li>
             <a href="#categories">Categories</a>
           </li>
+          <li>
+            <Link to='/signup'>
+            <button className="px-3 py-1 bg-[#22577a] text-white rounded">
+              Sign up
+            </button>
+            </Link>
+          </li>
+          <li>
+            <Link to='/login'>
+            <button className="px-3 py-1 bg-[#22577a] text-white rounded">
+              Log In
+            </button>
+            </Link>
+          </li>
           <li className="user-logo w-10 h-10 rounded-[50%] bg-purple-600 text-white text-xl flex justify-center items-center">
             A
           </li>
