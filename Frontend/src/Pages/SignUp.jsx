@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, Link } from "react-router-dom";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -75,7 +74,7 @@ function SignUp() {
   return (
     <div className="signup flex justify-evenly">
         
-      <div className="w-96 bg-[#1E2936] rounded-md p-6 space-y-4 md:space-y-6 sm:p-8">
+      <div className="w-96 bg-white dark:bg-[#1E2936] rounded-md p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           Create an account
         </h1>
