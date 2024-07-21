@@ -1,11 +1,13 @@
 const express = require("express")
 const router = express.Router()
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 const userModel = require("../models/user.model")
+const requireLogin = require("../middlewares/requireLogin")
 
 router.get("/users", (req, res)=>{
-    res.status(200).send("Hello from aut")
+    res.status(200).send("Hello from auth")
 })
 
 router.post("/signup", async (req, res)=>{
@@ -42,9 +44,25 @@ router.post("/signup", async (req, res)=>{
     .catch(err => console.log(err))
 })
 
-router.post("/login", (req, res)=>{
-    const { email, password } = req.body;
-    
+router.post("/login", async (req, res)=>{
+    const {email, password} = req.body;
+    if(!email || !password){
+        return res.status(400).json({message: "Please fill out all required fields."})
+    }
+    const user = await userModel.findOne({email : email})
+    if(user==null){
+        return res.status(400).json({message: "User does not exist"})
+    }
+    const isValidPassword = bcrypt.compareSync(password, user.password)
+    if(!isValidPassword){
+        return res.status(401).json({message: "Please enter a valid password"})
+    }
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+    res.status(200).json({message: "Logged in successfully.", token: token})
+})
+
+router.get("/createPost", requireLogin, (req, res)=>{
+    console.log("Hello from auth")
 })
 
 module.exports = router
