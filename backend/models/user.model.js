@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    image:{
+      type: String,
+      default: "https://res.cloudinary.com/g4m3r/image/upload/v1722315495/5907_svj2ak.jpg"
+    },
     userType: {
       type: String,
       required: true,

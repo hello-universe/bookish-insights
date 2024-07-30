@@ -16,6 +16,8 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(require("./routes/auth"))
+app.use(require("./routes/addBook"))
+app.use(require("./routes/users"))
 
 //DB config
 const connection_url = process.env.CONNECTION_URL

@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import hero_img from "../assets/undraw_books_re_8gea.svg";
+import { LoginContext } from "../context/LoginContext";
 
 function LogIn() {
   const navigate = useNavigate();
+  //useContext to set the login state
+  const {setLoggedIn} = useContext(LoginContext)
+
   //Use state for the email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,6 +51,8 @@ function LogIn() {
       }
       else{
         notifyOnSuccess(resData.message)
+        localStorage.setItem("token", resData.token)
+        setLoggedIn(true)
         navigate("/")
       }
     }
