@@ -58,7 +58,13 @@ router.post("/login", async (req, res)=>{
         return res.status(401).json({message: "Please enter a valid password"})
     }
     const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
-    res.status(200).json({message: "Logged in successfully.", token: token})
+    res.status(200).json({message: "Logged in successfully.", token: token, user: {
+        name: user.name,
+        userName: user.userName,
+        email: user.email,
+        image: user.image,
+        _id: user._id
+    }})
 })
 
 router.get("/createPost", requireLogin, (req, res)=>{

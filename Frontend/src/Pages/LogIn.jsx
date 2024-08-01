@@ -5,12 +5,12 @@ import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import hero_img from "../assets/undraw_books_re_8gea.svg";
-import { LoginContext } from "../context/LoginContext";
+import { Context } from "../context/Context";
 
 function LogIn() {
   const navigate = useNavigate();
   //useContext to set the login state
-  const {setLoggedIn} = useContext(LoginContext)
+  const {setLoggedIn} = useContext(Context)
 
   //Use state for the email and password
   const [email, setEmail] = useState("");
@@ -46,12 +46,14 @@ function LogIn() {
         body: JSON.stringify(dataObj)
       });
       const resData = await res.json()
+      console.log(resData)
       if(!res.ok){
         notifyOnError(resData.message)
       }
       else{
         notifyOnSuccess(resData.message)
         localStorage.setItem("token", resData.token)
+        localStorage.setItem("user", JSON.stringify(resData.user))
         setLoggedIn(true)
         navigate("/")
       }

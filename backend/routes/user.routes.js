@@ -3,6 +3,8 @@ const router = express.Router()
 const userModel = require("../models/user.model")
 const bookModel = require("../models/book.model")
 const requireLogin = require("../middlewares/requireLogin")
+const upload = require("../middlewares/multer.middleware")
+const uploadOnCloudinary = require("../utils/cloudinary")
 
 router.get("/profile", requireLogin, async (req, res)=>{
     try{
@@ -30,4 +32,20 @@ router.get("/users/:userName", async (req, res)=>{
     }
 })
 
+//Route to update profile picture
+router.put("/profile/updatepic", [requireLogin, upload.single("image"), async (req, res)=>{
+    try{
+        const user = req.user
+        if(!req.file){
+            return res.status(400).json({message: "Please upload an image"})
+        }
+        const uploadedImg = await uploadOnCloudinary(req.file.path)
+        user.image = uploadedImg.url
+        await user.save()
+        res.status(200).json({message: "Profile picture updated successfully", user: user})
+    }
+    catch(err){
+        res.status(500).json({message: "Error while updating profile picture", error: err})
+    }
+}])
 module.exports = router

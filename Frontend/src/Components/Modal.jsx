@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { LoginContext } from "../context/LoginContext";
+import { Context } from "../context/Context";
 import {useNavigate} from 'react-router-dom'
 
 function Modal() {
-  const { setModalOpen } = useContext(LoginContext);
+  const { setModalOpen } = useContext(Context);
   const navigate = useNavigate()
   return (
     <div className="modal w-screen h-screen absolute inset-0 bg-[rgba(0,0,0,0.2)]">

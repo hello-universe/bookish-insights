@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { LoginContext } from "../context/LoginContext";
+import { Context } from "../context/Context";
 import { useNavigate } from "react-router-dom";
 function toggleMobileMenu() {
   const menu = document.getElementById("menu");
@@ -15,9 +15,11 @@ function Header() {
   //navbar will not be displayed accordingly
 
   //useContext to get login state and modal state
-  const { loggedIn, setModalOpen } = useContext(LoginContext);
+  const { loggedIn, setModalOpen } = useContext(Context);
   //Getting token from local storage
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const thumbnailImgUrl = user.image.replace("/upload", "/upload/w_60,h_60,c_fill,g_north/") 
 
   //useEffect to redirect to login page if user is not signed in
   useEffect(() => {
@@ -50,11 +52,15 @@ function Header() {
                 <Link to="/books">Books</Link>
               </li>
               <li>
-              <Link to="/categories">Categories</Link>
+                <Link to="/categories">Categories</Link>
               </li>
               <li>
                 <Link to="/profile">
-                  <button className="user-logo w-10 h-10 rounded-[50%] bg-purple-600 text-white text-xl flex justify-center items-center"></button>
+                  <img
+                    className="w-10 h-10  rounded-full ring-2 ring-gray-300 dark:ring-gray-500 object-cover object-top"
+                    src={thumbnailImgUrl}
+                    alt="Bordered avatar"
+                  />
                 </Link>
               </li>
               <li>

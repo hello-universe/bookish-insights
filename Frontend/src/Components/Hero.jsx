@@ -1,5 +1,6 @@
 import React from 'react'
 import hero_img from '../assets/undraw_books_re_8gea.svg'
+import { Link } from 'react-router-dom'
 function Hero() {
   return (
     <div className='flex flex-col gap-8 md:flex-row'>
@@ -12,9 +13,9 @@ function Hero() {
             </span>
 
             </p>
-            <button className='self-start p-2 rounded bg-[#22577a] font-medium text-white'>
+            <Link to={"/books"} className='self-start p-2 rounded bg-[#22577a] font-medium text-white'>
                 Explore books
-            </button>
+            </Link>
         </div>
         <div className="hero-right flex-1">
             <img src={hero_img} alt="" />

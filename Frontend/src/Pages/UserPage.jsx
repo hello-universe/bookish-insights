@@ -35,7 +35,7 @@ function ProfilePage() {
     <div className="profile-page flex flex-col gap-12">
       <div className="user-profile bg-[#DBF1FF] py-8 flex flex-col gap-8 lg:flex-row lg:gap-36 justify-center items-center">
         <div className="user-img  flex flex-col gap-4 items-center">
-          <img src={image} className="w-60 h-60 rounded-[50%] p-2 ring-2 ring-gray-300 dark:ring-gray-500" alt="" />
+          <img src={image} className="w-60 h-60 rounded-[50%] object-cover object-top p-2 ring-2 ring-gray-300 dark:ring-gray-500" alt="" />
         </div>
         <div className="user-info text-2xl flex flex-col gap-5">
           <div className="user-name flex gap-10">
