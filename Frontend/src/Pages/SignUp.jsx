@@ -44,10 +44,10 @@ function SignUp() {
         return ;
     }
     const dataObj = {
-      name: name,
-      email: email,
-      password: password,
-      userName: userName,
+      name: name.trim(),
+      email: email.trim(),
+      password: password.trim(),
+      userName: userName.trim(),
     };
     try {
       const res = await fetch("https://bookish-insights-production.up.railway.app/signup", {

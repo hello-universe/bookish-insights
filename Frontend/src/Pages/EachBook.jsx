@@ -7,7 +7,6 @@ import Review from "../Components/Review";
 function EachBook() {
   const params = useParams();
   const navigate = useNavigate();
-  const [rated, setRated] = useState(undefined);
   const [userReview, setUserReview] = useState("");
 
   const [name, setName] = useState("");
@@ -41,12 +40,12 @@ function EachBook() {
           setAddedBy(data.addedBy.userName);
           setReviews(data.reviews);
           //Check if user has already rated the book
-          if (user) {
-            const hasRated = data.ratings.find(
-              (rating) => rating.user === user._id
-            );
-            setRated(hasRated);
-          }
+          // if (user) {
+          //   const hasRated = data.ratings.find(
+          //     (rating) => rating.user === user._id
+          //   );
+          //   setRated(hasRated);
+          // }
         }
       } catch (err) {
         console.log(err);
@@ -114,7 +113,7 @@ function EachBook() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            review: userReview,
+            review: userReview.trim(),
           }),
         }
       );
@@ -187,10 +186,7 @@ function EachBook() {
       </div>
       <div className="give-rating">
         <h2 className="text-2xl font-medium mb-2">
-          Rate this book{" "}
-          <span className="text-lg text-gray-600 font-normal">
-            {rated ? "(You already rated with " + rated.rating + " stars)" : ""}
-          </span>
+          Rate this book
         </h2>
         <Rating onRate={handleRate} />
       </div>

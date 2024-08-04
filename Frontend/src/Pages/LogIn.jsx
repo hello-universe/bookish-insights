@@ -33,8 +33,8 @@ function LogIn() {
         return ;
     }
     const dataObj = {
-      email: email,
-      password: password
+      email: email.trim(),
+      password: password.trim()
     }
     try{
       const res = await fetch("https://bookish-insights-production.up.railway.app/login", {

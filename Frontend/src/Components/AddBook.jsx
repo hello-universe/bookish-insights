@@ -18,11 +18,11 @@ function AddBook() {
   const postDetails = async () => {
     // console.log(name, author, image, category, description)
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("author", author);
+    formData.append("name", name.trim());
+    formData.append("author", author.trim());
     formData.append("image", image);
     formData.append("category", category);
-    formData.append("description", description);
+    formData.append("description", description.trim());
 
     try {
       const res = await fetch("https://bookish-insights-production.up.railway.app/profile/addbook", {

@@ -16,7 +16,7 @@ function ProfilePage() {
             try{
                 const res = await fetch(`https://bookish-insights-production.up.railway.app/users/${params.userName}`)
                 const data = await res.json()
-                console.log(data)
+                // console.log(data)
                 if(res.ok){
                     setImage(data.user.image)
                     setName(data.user.name)
