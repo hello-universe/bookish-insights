@@ -37,7 +37,7 @@ function LogIn() {
       password: password
     }
     try{
-      const res = await fetch("http://localhost:8000/login", {
+      const res = await fetch("https://bookish-insights-production.up.railway.app/login", {
         method: "post",
         headers: {
           "Content-Type": "application/json"

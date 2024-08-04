@@ -16,7 +16,6 @@ import Modal from './Components/Modal';
 import EachBook from './Pages/EachBook';
 import UserPage from "./Pages/UserPage"
 import ProfilePic from './Components/ProfilePic';
-import Navbar from './Components/Navbar';
 import CategoryBooks from './Pages/CategoryBooks';
 
 
@@ -35,7 +34,6 @@ function App() {
         <Route path='/signup' Component={SignUp} />
         <Route path='/login' Component={LogIn} />
         <Route exact path='/profile' Component={ProfilePage} />
-        <Route path='/categories' Component={Navbar} />
         <Route path='/profile/addbook' Component={AddBook} />
         <Route path='/books/:bookId' Component={EachBook} />
         <Route path='/books/category/:category' Component={CategoryBooks} />

@@ -16,7 +16,7 @@ function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch("http://localhost:8000/profile", {
+        const res = await fetch("https://bookish-insights-production.up.railway.app/profile", {
           method: "get",
           headers: {
             "x-access-token": localStorage.getItem("token"),

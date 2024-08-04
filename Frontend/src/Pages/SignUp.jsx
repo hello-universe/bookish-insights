@@ -50,7 +50,7 @@ function SignUp() {
       userName: userName,
     };
     try {
-      const res = await fetch("http://localhost:8000/signup", {
+      const res = await fetch("https://bookish-insights-production.up.railway.app/signup", {
         method: "post",
         headers: {
           "Content-Type": "application/json",

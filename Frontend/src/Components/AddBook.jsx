@@ -25,7 +25,7 @@ function AddBook() {
     formData.append("description", description);
 
     try {
-      const res = await fetch("http://localhost:8000/profile/addbook", {
+      const res = await fetch("https://bookish-insights-production.up.railway.app/profile/addbook", {
         method: "post",
         body: formData,
         headers: {

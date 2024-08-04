@@ -7,7 +7,6 @@ import Review from "../Components/Review";
 function EachBook() {
   const params = useParams();
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
   const [rated, setRated] = useState(undefined);
   const [userReview, setUserReview] = useState("");
 
@@ -29,7 +28,7 @@ function EachBook() {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/books/${params.bookId}`);
+        const res = await fetch(`https://bookish-insights-production.up.railway.app/books/${params.bookId}`);
         const data = await res.json();
         if (res.ok) {
           setName(data.name);
@@ -69,7 +68,7 @@ function EachBook() {
     // }
     try {
       const res = await fetch(
-        `http://localhost:8000/books/${params.bookId}/rate`,
+        `https://bookish-insights-production.up.railway.app/books/${params.bookId}/rate`,
         {
           method: "put",
           headers: {
@@ -107,7 +106,7 @@ function EachBook() {
     // }
     try {
       const res = await fetch(
-        `http://localhost:8000/books/${params.bookId}/review`,
+        `https://bookish-insights-production.up.railway.app/books/${params.bookId}/review`,
         {
           method: "put",
           headers: {

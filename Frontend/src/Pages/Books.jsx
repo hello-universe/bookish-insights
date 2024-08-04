@@ -8,7 +8,7 @@ function Books() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch("http://localhost:8000/books", {
+        const res = await fetch("https://bookish-insights-production.up.railway.app/books", {
           method: "get",
           headers: {
             "x-access-token": localStorage.getItem("token"),

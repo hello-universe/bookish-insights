@@ -14,7 +14,7 @@ function ProfilePage() {
     useEffect(()=>{
         const fetchUser = async () =>{
             try{
-                const res = await fetch(`http://localhost:8000/users/${params.userName}`)
+                const res = await fetch(`https://bookish-insights-production.up.railway.app/users/${params.userName}`)
                 const data = await res.json()
                 console.log(data)
                 if(res.ok){

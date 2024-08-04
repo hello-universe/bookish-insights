@@ -40,7 +40,7 @@ function Header() {
   useEffect(() => {
     const fetchUser = async () => {
       if (token) {
-        const res = await fetch("http://localhost:8000/user", {
+        const res = await fetch("https://bookish-insights-production.up.railway.app/user", {
           method: "get",
           headers: {
             "x-access-token": token,

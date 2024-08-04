@@ -22,7 +22,7 @@ function ProfilePic() {
     const formData = new FormData();
     formData.append("image", profileImg);
     try{
-        const res = await fetch("http://localhost:8000/profile/updatepic", {
+        const res = await fetch("https://bookish-insights-production.up.railway.app/profile/updatepic", {
             method: "put",
             body: formData,
             headers: {

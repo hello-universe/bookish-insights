@@ -16,7 +16,7 @@ function CategoryBooks() {
     const fetchCategoryBooks = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8000/books/category/${category}`,
+          `https://bookish-insights-production.up.railway.app/books/category/${category}`,
           { method: "get" }
         );
         const data = await res.json();
