@@ -1,37 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import BookCard from "../Components/BookCard";
 import SearchBar from "../Components/SearchBar";
 
-function Books() {
-  const [books, setBooks] = useState([]);
+function CategoryBooks() {
+  const params = useParams();
+  const { category } = params;
+  const [categoryBooks, setCategoryBooks] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
+
+  const handleSearchChange = (keyword) => {
+    setSearchKeyword(keyword);
+  };
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchCategoryBooks = async () => {
       try {
-        const res = await fetch("http://localhost:8000/books", {
-          method: "get",
-          headers: {
-            "x-access-token": localStorage.getItem("token"),
-          },
-        });
+        const res = await fetch(
+          `http://localhost:8000/books/category/${category}`,
+          { method: "get" }
+        );
         const data = await res.json();
-        if (res.ok && Array.isArray(data)) {
-          setBooks(data);
+        if (res.ok) {
+          setCategoryBooks(data);
         } else {
-          console.log("Expected array but received: ", data);
-          setBooks([]);
+          setCategoryBooks([]);
+          console.log(data.message);
         }
       } catch (err) {
         console.log(err);
       }
     };
-    fetchBooks();
-  }, []);
+    fetchCategoryBooks();
+  }, [category]);
 
-  const handleSearchChange = (keyword) => {
-    setSearchKeyword(keyword);
-  };
-  const filteredBooks = books.filter(
+  const filteredBooks = categoryBooks.filter(
     (book) =>
       book.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
       book.author.toLowerCase().includes(searchKeyword.toLowerCase()) ||
@@ -43,8 +45,7 @@ function Books() {
         searchKeyword={searchKeyword}
         handleSearchChange={handleSearchChange}
       />
-
-      <div className="books-container flex flex-wrap justify-center gap-8 bg-[#DBF1FF] p-4 rounded-md sm:justify-start">
+      <div className="books-container flex flex-wrap gap-8 bg-[#DBF1FF] p-4 rounded-md">
         {filteredBooks.length === 0 ? (
           <p className="text-lg font-medium">No books found</p>
         ) : (
@@ -57,4 +58,4 @@ function Books() {
   );
 }
 
-export default Books;
+export default CategoryBooks;

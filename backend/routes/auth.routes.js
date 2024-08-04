@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
 const userModel = require("../models/user.model")
-const requireLogin = require("../middlewares/requireLogin")
 
 router.get("/users", (req, res)=>{
     res.status(200).send("Hello from auth")
@@ -57,7 +56,7 @@ router.post("/login", async (req, res)=>{
     if(!isValidPassword){
         return res.status(401).json({message: "Please enter a valid password"})
     }
-    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET)
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "1d"})
     res.status(200).json({message: "Logged in successfully.", token: token, user: {
         name: user.name,
         userName: user.userName,
@@ -67,8 +66,5 @@ router.post("/login", async (req, res)=>{
     }})
 })
 
-router.get("/createPost", requireLogin, (req, res)=>{
-    console.log("Hello from auth")
-})
 
 module.exports = router

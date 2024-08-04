@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 const Review = ({ review }) => {
   const [isOpen, setIsOpen] = useState(false);
   const date = new Date(review.createdAt);
@@ -18,14 +19,14 @@ const Review = ({ review }) => {
     <article className="p-6 mb-3 text-base border-t border-gray-200">
       <footer className="flex justify-between items-center mb-2 relative">
         <div className="flex items-center">
-          <p className="inline-flex items-center mr-3 text-sm text-gray-900">
+          <Link to={`/users/${review.user.userName}`} className="inline-flex items-center mr-3 text-sm text-gray-900">
             <img
               className="mr-2 w-6 h-6 rounded-full ring-2 ring-gray-300 dark:ring-gray-500 object-cover object-top"
               src={thumbnailImgUrl}
               alt="User Profile pic"
             />
             {review.user.userName}
-          </p>
+          </Link>
           <p className="text-sm text-gray-600">
             <time>{formattedDate}</time>
           </p>

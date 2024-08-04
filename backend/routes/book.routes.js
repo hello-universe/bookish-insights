@@ -50,9 +50,9 @@ router.post(
 );
 
 //To get all books
-router.get("/books", requireLogin, async (req, res) => {
+router.get("/books", async (req, res) => {
   try {
-    const books = await bookModel.find();
+    const books = await bookModel.find().sort({ createdAt: -1 });
     res.status(200).json(books);
   } catch (err) {
     res.status(500).json({ message: "Error while getting books", error: err });
@@ -64,7 +64,8 @@ router.get("/books/:bookId", async (req, res) => {
   try {
     const book = await bookModel
       .findById(req.params.bookId)
-      .populate({ path: "addedBy", select: "-password" }).populate({path: "reviews.user", select: "-password"});
+      .populate({ path: "addedBy", select: "-password" })
+      .populate({ path: "reviews.user", select: "-password" });
     res.status(200).json(book);
   } catch (err) {
     res.status(500).json({ message: "Error while getting book", error: err });
@@ -78,7 +79,8 @@ router.put("/books/:bookId/rate", requireLogin, async (req, res) => {
     if (!book) {
       return res.status(404).json({ message: "Book not found" });
     }
-    const { userId, rating } = req.body;
+    const { rating } = req.body;
+    const userId = req.user._id;
     //Check if user has already rated the book
     const existingRating = book.ratings.find((rating) => rating.user == userId);
     if (existingRating) {
@@ -97,20 +99,35 @@ router.put("/books/:bookId/rate", requireLogin, async (req, res) => {
 
 //Route to give review to a book
 
-  router.put("/books/:bookId/review", requireLogin, async (req, res)=>{
-    try{
-        const book = await bookModel.findById(req.params.bookId).populate({path: "reviews.user", select: "-password"})
-        if(!book){
-          return res.status(404).json({message: "Book not found"})
-        }
-        const {userId, review} = req.body;
-        book.reviews.push({review: review, user: userId})
-        await book.save()
-        res.status(200).json({message: "Review added successfully", book: book})
+router.put("/books/:bookId/review", requireLogin, async (req, res) => {
+  const user = req.user;
+  const userId = user._id;
+  try {
+    const book = await bookModel
+      .findById(req.params.bookId)
+      .populate({ path: "reviews.user", select: "-password" });
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
     }
-    catch(err){
-        res.status(500).json({message: "Error while rating book", error: err})
-    }
-  })
+    const { review } = req.body;
+    book.reviews.push({ review: review, user: userId });
+    await book.save();
+    res.status(200).json({ message: "Review added successfully", book: book });
+  } catch (err) {
+    res.status(500).json({ message: "Error while reviewing book", error: err });
+  }
+});
 
+//Route to get books according to category
+router.get("/books/category/:category", async (req, res) => {
+  const { category } = req.params;
+  try {
+    const books = await bookModel
+      .find({ category: { $regex: new RegExp(`^${category}$`, "i") } })
+      .sort({ createdAt: -1 });
+    res.status(200).json(books);
+  } catch (err) {
+    res.status(500).json({ message: "Error while getting books", error: err });
+  }
+});
 module.exports = router;

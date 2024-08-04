@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BookCard from "../Components/BookCard";
 import { Context } from "../context/Context";
 
 function ProfilePage() {
+  const navigate = useNavigate()
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [userName, setUserName] = useState("");
@@ -28,6 +29,9 @@ function ProfilePage() {
           setUserName(data.user.userName);
           setEmail(data.user.email);
           setBooks(data.books);
+        }
+        else{
+          navigate("/login")
         }
         // console.log(data);
       } catch (err) {
@@ -69,7 +73,7 @@ function ProfilePage() {
             <p className="flex-grow text-left">{email}</p>
           </div>
           <Link to="/profile/addbook">
-            <button className="px-3 py-1 bg-[#d43e48] text-white rounded self-start">
+            <button className="px-3 py-1 bg-red-600 text-white text-xl rounded self-start transition duration-300 ease-in-out hover:bg-red-700">
               Add a Book
             </button>
           </Link>

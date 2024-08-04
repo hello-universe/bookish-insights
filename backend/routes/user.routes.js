@@ -6,9 +6,12 @@ const requireLogin = require("../middlewares/requireLogin")
 const upload = require("../middlewares/multer.middleware")
 const uploadOnCloudinary = require("../utils/cloudinary")
 
+router.get("/user", requireLogin, async(req, res)=>{
+    res.status(200).json({user: req.user});
+})
 router.get("/profile", requireLogin, async (req, res)=>{
     try{
-        const books = await bookModel.find({addedBy: req.user._id})
+        const books = await bookModel.find({addedBy: req.user._id}).sort({createdAt: -1})
         res.status(200).json({user: req.user, books: books})
     }
     catch(err){

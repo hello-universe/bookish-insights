@@ -1,16 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import hero_img from "../assets/undraw_books_re_8gea.svg";
-import { Context } from "../context/Context";
+
 
 function LogIn() {
   const navigate = useNavigate();
-  //useContext to set the login state
-  const {setLoggedIn} = useContext(Context)
+
 
   //Use state for the email and password
   const [email, setEmail] = useState("");
@@ -53,8 +52,6 @@ function LogIn() {
       else{
         notifyOnSuccess(resData.message)
         localStorage.setItem("token", resData.token)
-        localStorage.setItem("user", JSON.stringify(resData.user))
-        setLoggedIn(true)
         navigate("/")
       }
     }
@@ -84,7 +81,7 @@ function LogIn() {
               value={"" || email}
               onChange={(e) => setEmail(e.target.value)}
               className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="name@company.com"
+              placeholder="Email Address"
               required=""
             />
           </div>

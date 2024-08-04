@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Rating from "../Components/Rating";
 import Review from "../Components/Review";
 
 function EachBook() {
   const params = useParams();
+  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   const [rated, setRated] = useState(undefined);
   const [userReview, setUserReview] = useState("");
@@ -30,7 +31,6 @@ function EachBook() {
       try {
         const res = await fetch(`http://localhost:8000/books/${params.bookId}`);
         const data = await res.json();
-        console.log(data.reviews);
         if (res.ok) {
           setName(data.name);
           setAuthor(data.author);
@@ -41,12 +41,14 @@ function EachBook() {
           setDescription(data.description);
           setAddedBy(data.addedBy.userName);
           setReviews(data.reviews);
+          //Check if user has already rated the book
+          if (user) {
+            const hasRated = data.ratings.find(
+              (rating) => rating.user === user._id
+            );
+            setRated(hasRated);
+          }
         }
-        //Check if user has already rated the book
-        const hasRated = data.ratings.find(
-          (rating) => rating.user === user._id
-        );
-        setRated(hasRated);
       } catch (err) {
         console.log(err);
       }
@@ -59,6 +61,12 @@ function EachBook() {
     // console.log(`Rated with ${rating} stars`);
     // Handle the rating submission here, e.g., send it to the backend
 
+    // Check if user is logged in
+    // if (!user) {
+    //   notifyOnError("Please login to rate this book.");
+    //   navigate("/login");
+    //   return;
+    // }
     try {
       const res = await fetch(
         `http://localhost:8000/books/${params.bookId}/rate`,
@@ -70,15 +78,19 @@ function EachBook() {
           },
           body: JSON.stringify({
             rating: rating,
-            userId: user._id,
           }),
         }
       );
       const data = await res.json();
-      if(res.ok){
+      // console.log(res);
+      // console.log(data);
+      //This condition arises when the either the token present in local storage is invalid or the user is not found
+      if (res.ok) {
         notifyOnSuccess(data.message);
+      } else {
+        notifyOnError(data.message);
+        navigate("/login");
       }
-      else notifyOnError(data.message);
     } catch (err) {
       console.log(err);
       notifyOnError("Something went wrong. Please try again later.");
@@ -87,28 +99,37 @@ function EachBook() {
 
   // Handle review submission
   const handleReview = async () => {
-    try{
-      const res = await fetch(`http://localhost:8000/books/${params.bookId}/review`, {
-        method: "put",
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: user._id,
-          review: userReview
-        })
-      });
+    // Check if user is logged in
+    // if (!user) {
+    //   notifyOnError("Please login to give a review.");
+    //   navigate("/login");
+    //   return;
+    // }
+    try {
+      const res = await fetch(
+        `http://localhost:8000/books/${params.bookId}/review`,
+        {
+          method: "put",
+          headers: {
+            "x-access-token": localStorage.getItem("token"),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            review: userReview,
+          }),
+        }
+      );
       const data = await res.json();
-      if(res.ok){
+      if (res.ok) {
         notifyOnSuccess(data.message);
+      } else {
+        notifyOnError(data.message);
+        navigate("/login");
       }
-      else notifyOnError(data.message);
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-  }
+  };
   return (
     <div className="container flex flex-col gap-10 w-full">
       <div className="info w-full flex flex-col gap-8 items-center md:items-start  md:flex-row">
@@ -193,24 +214,25 @@ function EachBook() {
                 placeholder="Write your review..."
                 required
                 value={userReview}
-                onChange={(event)=>setUserReview(event.target.value)}
+                onChange={(event) => setUserReview(event.target.value)}
               ></textarea>
             </div>
             <div className="flex items-center justify-between py-2 border-t">
               <button
                 type="submit"
                 className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 hover:bg-blue-800"
-                onClick={handleReview}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleReview();
+                }}
               >
                 Post Review
               </button>
             </div>
           </div>
         </form>
-        {reviews.map((review)=>{
-          return (
-            <Review key={review._id} review={review} />
-          )
+        {reviews.map((review) => {
+          return <Review key={review._id} review={review} />;
         })}
       </div>
     </div>

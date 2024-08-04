@@ -15,17 +15,18 @@ import { Context } from './context/Context';
 import Modal from './Components/Modal';
 import EachBook from './Pages/EachBook';
 import UserPage from "./Pages/UserPage"
-import Rating from './Components/Rating';
 import ProfilePic from './Components/ProfilePic';
+import Navbar from './Components/Navbar';
+import CategoryBooks from './Pages/CategoryBooks';
 
 
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  
   const [modalOpen, setModalOpen] = useState(false);
   const [profilePicModal, setProfilePicModal] = useState(false);
   return (
-    <Context.Provider value={{loggedIn, setLoggedIn, modalOpen, setModalOpen, profilePicModal, setProfilePicModal}}>
+    <Context.Provider value={{modalOpen, setModalOpen, profilePicModal, setProfilePicModal}}>
     <div className='app p-4 md:px-8 bg-[#a7edff] min-h-screen'>
       <Header />
       <Routes>
@@ -34,9 +35,10 @@ function App() {
         <Route path='/signup' Component={SignUp} />
         <Route path='/login' Component={LogIn} />
         <Route exact path='/profile' Component={ProfilePage} />
-        <Route path='/categories' Component={Rating} />
+        <Route path='/categories' Component={Navbar} />
         <Route path='/profile/addbook' Component={AddBook} />
         <Route path='/books/:bookId' Component={EachBook} />
+        <Route path='/books/category/:category' Component={CategoryBooks} />
         <Route path='/users/:userName' Component={UserPage} />
       </Routes>
       <ToastContainer theme='dark'/>
