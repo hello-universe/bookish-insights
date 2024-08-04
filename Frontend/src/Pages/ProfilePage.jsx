@@ -59,18 +59,18 @@ function ProfilePage() {
             Change
           </button>
         </div>
-        <div className="user-info text-lg flex flex-col gap-5 sm:text-xl lg:text-2xl">
-          <div className="user-name flex gap-10">
-            <p className="w-36 ">Username:</p>
-            <p className="flex-grow text-left">{userName}</p>
+        <div className="user-info text-sm flex flex-col sm:text-xl lg:text-2xl">
+          <div className="user-name flex gap-1 md:gap-8 bg-gray-200 p-3">
+            <p className="font-medium w-24 sm:w-32">Username:</p>
+            <p className="flex-grow text-left text-gray-600">{userName}</p>
           </div>
-          <div className="name flex gap-10">
-            <p className="w-36">Name:</p>
-            <p className="flex-grow text-left">{name}</p>
+          <div className="name flex gap-1 md:gap-8 p-3">
+            <p className="font-medium w-24 sm:w-32">Name:</p>
+            <p className="flex-grow text-left text-gray-600">{name}</p>
           </div>
-          <div className="email flex gap-10">
-            <p className="w-36">Email:</p>
-            <p className="flex-grow text-left">{email}</p>
+          <div className="email flex gap-1 md:gap-8 bg-gray-200 p-3 mb-8">
+            <p className="font-medium w-24 sm:w-32">Email:</p>
+            <p className="flex-grow text-left text-gray-600">{email}</p>
           </div>
           <Link to="/profile/addbook">
             <button className="px-3 py-1 bg-red-600 text-white text-xl rounded self-start transition duration-300 ease-in-out hover:bg-red-700">
@@ -82,7 +82,7 @@ function ProfilePage() {
 
       <div className="user-books flex flex-col gap-5">
         <h1 className="text-2xl font-bold">Your Books</h1>
-        <div className="books-container flex flex-wrap justify-center gap-8 bg-[#DBF1FF] p-4 rounded-md sm:justify-start">
+        <div className="books-container flex flex-wrap justify-center gap-8 bg-[#DBF1FF] p-4 rounded-md xs:justify-start">
           {books.length > 0 ? (
             books.map((book) => {
               return <BookCard key={book._id} book={book} />;

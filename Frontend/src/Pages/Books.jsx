@@ -44,7 +44,7 @@ function Books() {
         handleSearchChange={handleSearchChange}
       />
 
-      <div className="books-container flex flex-wrap justify-center gap-8 bg-[#DBF1FF] p-4 rounded-md sm:justify-start">
+      <div className="books-container flex flex-wrap justify-center gap-8 bg-[#DBF1FF] p-4 rounded-md xs:justify-start">
         {filteredBooks.length === 0 ? (
           <p className="text-lg font-medium">No books found</p>
         ) : (
