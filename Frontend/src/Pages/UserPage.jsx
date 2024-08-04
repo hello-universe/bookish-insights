@@ -37,7 +37,7 @@ function ProfilePage() {
         <div className="user-img  flex flex-col gap-4 items-center">
           <img src={image} className="w-60 h-60 rounded-[50%] object-cover object-top p-2 ring-2 ring-gray-300 dark:ring-gray-500" alt="" />
         </div>
-        <div className="user-info text-2xl flex flex-col gap-5">
+        <div className="user-info text-lg flex flex-col gap-5 sm:text-xl lg:text-2xl">
           <div className="user-name flex gap-10">
             <p className="w-36 ">Username:</p>
             <p className="flex-grow text-left">{userName}</p>
@@ -56,7 +56,7 @@ function ProfilePage() {
 
       <div className="user-books flex flex-col gap-5">
         <h1 className="text-2xl font-bold">Books added by User</h1>
-        <div className="books-container flex flex-wrap gap-8 bg-[#DBF1FF] p-4 rounded-md">
+        <div className="books-container flex flex-wrap justify-center gap-8 bg-[#DBF1FF] p-4 rounded-md sm:justify-start">
             {books.map((book)=>{
                 return <BookCard key={book._id} book={book}/>
             })}
