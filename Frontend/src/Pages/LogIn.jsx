@@ -55,7 +55,6 @@ function LogIn() {
         localStorage.setItem("token", resData.token)
         navigate("/")
       }
-      console.log(res);
     }
     catch(err){
       if(err.response && err.response.data && err.response.data.message){
