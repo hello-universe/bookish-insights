@@ -82,7 +82,9 @@ router.put("/books/:bookId/rate", requireLogin, async (req, res) => {
     const { rating } = req.body;
     const userId = req.user._id;
     //Check if user has already rated the book
-    const existingRating = book.ratings.find((rating) => rating.user == userId);
+    //The rating.user is an ObjectId, while userId might be a string or another ObjectId. Using == for 
+    //comparison may not work as expected because it doesn't handle the type mismatch properly.
+    const existingRating = book.ratings.find((rating) => rating.user.equals(userId));
     if (existingRating) {
       existingRating.rating = rating;
     } else {

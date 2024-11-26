@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import hero_img from '../assets/undraw_books_re_8gea.svg'
+import axios from "../axios";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import hero_img from "../assets/undraw_books_re_8gea.svg";
 
 function SignUp() {
   const [name, setName] = useState("");
@@ -12,7 +13,7 @@ function SignUp() {
   const [userName, setUserName] = useState("");
 
   //Use state for the state of either the password is visible or not
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
 
   //useNavigate() function is used to navigate programmatically between different routes in a React application.
   const navigate = useNavigate();
@@ -26,22 +27,25 @@ function SignUp() {
   const notifyOnSuccess = (msg) => toast.success(msg);
 
   //Regex to check for valid email
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
   //Regex for strong password
-  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
 
   //Function to trigger when we click on create account
 
   const postData = async () => {
     //Checking for valid email using emailRegex
-    if(!emailRegex.test(email)){
-        notifyOnError("Please enter a valid email")
-        return ;
+    if (!emailRegex.test(email)) {
+      notifyOnError("Please enter a valid email");
+      return;
     } //Checkinf for strong password using strongPasswordRegex
-    else if(!strongPasswordRegex.test(password)){
-        notifyOnError("Password must contain at least eight characters, including at least one number, one uppercase letter, one lowercase letter and also at least one special character.")
-        return ;
+    else if (!strongPasswordRegex.test(password)) {
+      notifyOnError(
+        "Password must contain at least eight characters, including at least one number, one uppercase letter, one lowercase letter and also at least one special character."
+      );
+      return;
     }
     const dataObj = {
       name: name.trim(),
@@ -49,31 +53,33 @@ function SignUp() {
       password: password.trim(),
       userName: userName.trim(),
     };
+
+
     try {
-      const res = await fetch("https://bookish-insights-production.up.railway.app/signup", {
-        method: "post",
+      const res = await axios.post("/signup", dataObj, {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataObj), //JSON.stringify() converts a JavaScript object or value to a JSON string.
       });
-      const data = await res.json();
-      //Checks if the response status is not in the range of 200-299, which indicates a successful request. If not, it throws an error.
-      if (!res.ok) {
-        notifyOnError(data.message);
-        
-      } else{
-        navigate("/login"); 
-        notifyOnSuccess(data.message);
+      const resData = res.data;
+      if (res.status !== 200) {
+        notifyOnError(resData.message);
+      } else {
+        notifyOnSuccess(resData.message);
+        navigate("/login");
       }
     } catch (err) {
-      console.log("Problem with fetch operation: ", err);
+      if (err.response && err.response.data && err.response.data.message) {
+        notifyOnError(err.response.data.message);
+      } else {
+        console.log("Error while sending data: ", err);
+        notifyOnError("Something went wrong. Please try again later.");
+      }
     }
   };
 
   return (
     <div className="signup flex justify-evenly">
-        
       <div className="w-96 bg-white dark:bg-[#1E2936] rounded-md p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
           Create an account
@@ -123,21 +129,28 @@ function SignUp() {
               Password
             </label>
             <div className="password-wrap relative">
-            <input
-              type={visible ? "text" : "password"}
-              name="password"
-              id="password"
-              placeholder="••••••••"
-              value={password || ""}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required=""
-            />
-            <button type="button" className="absolute right-2 top-[50%] translate-y-[-50%]" onClick={()=>setVisible(!visible)}>
-            {visible ?  <VisibilityOffIcon className="text-[#1E2936]"/> : <VisibilityIcon className=" text-[#1E2936]"/>}
-            </button>
+              <input
+                type={visible ? "text" : "password"}
+                name="password"
+                id="password"
+                placeholder="••••••••"
+                value={password || ""}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required=""
+              />
+              <button
+                type="button"
+                className="absolute right-2 top-[50%] translate-y-[-50%]"
+                onClick={() => setVisible(!visible)}
+              >
+                {visible ? (
+                  <VisibilityOffIcon className="text-[#1E2936]" />
+                ) : (
+                  <VisibilityIcon className=" text-[#1E2936]" />
+                )}
+              </button>
             </div>
-
           </div>
           <div>
             <label
@@ -179,8 +192,8 @@ function SignUp() {
       </div>
 
       <div className="hero-right hidden md:block">
-            <img src={hero_img} alt="" />
-        </div>
+        <img src={hero_img} alt="" />
+      </div>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
+import axios from "../axios"
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import {useNavigate} from "react-router-dom"
@@ -21,29 +22,27 @@ function ProfilePic() {
   const postImage = async ()=>{
     const formData = new FormData();
     formData.append("image", profileImg);
+
+
     try{
-        const res = await fetch("https://bookish-insights-production.up.railway.app/profile/updatepic", {
-            method: "put",
-            body: formData,
+        const res = await axios.put("/profile/updatepic", formData, {
             headers: {
               "x-access-token": localStorage.getItem("token"),
             }
         })
-        const data = await res.json()
-        if(!res.ok){
-            notifyOnError(data.message)
+        console.log(res);
+        const resData = await res.data
+        if(res.status !== 200){
+            notifyOnError(resData.message)
         }
         else{
-            const user = JSON.parse(localStorage.getItem("user"))
-            user.image = data.user.image
-            localStorage.setItem("user", JSON.stringify(user))
-            notifyOnSuccess(data.message)
+            notifyOnSuccess(resData.message)
             setProfilePicModal(false)
-            navigate("/profile")
+            location.reload()
         }
     }
     catch(err){
-        console.log(err)
+      console.log(err);
     }
   }
   useEffect(()=>{

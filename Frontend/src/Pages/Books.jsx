@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import BookCard from "../Components/BookCard";
 import SearchBar from "../Components/SearchBar";
+import axios from "../axios.js";
 
 function Books() {
   const [books, setBooks] = useState([]);
@@ -8,17 +9,17 @@ function Books() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await fetch("https://bookish-insights-production.up.railway.app/books", {
-          method: "get",
+        const res = await axios.get("/books", {
           headers: {
             "x-access-token": localStorage.getItem("token"),
           },
         });
-        const data = await res.json();
-        if (res.ok && Array.isArray(data)) {
-          setBooks(data);
+
+        const books = res.data;
+        if (Array.isArray(books)) {
+          setBooks(books);
         } else {
-          console.log("Expected array but received: ", data);
+          console.log("Expected array but received: ", books);
           setBooks([]);
         }
       } catch (err) {

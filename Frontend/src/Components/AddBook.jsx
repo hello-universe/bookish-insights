@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import axios from "../axios";
 import AddIcon from "@mui/icons-material/Add";
 import { toast } from "react-toastify";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 function AddBook() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
@@ -25,23 +26,27 @@ function AddBook() {
     formData.append("description", description.trim());
 
     try {
-      const res = await fetch("https://bookish-insights-production.up.railway.app/profile/addbook", {
-        method: "post",
-        body: formData,
+      const res = await axios.post("/profile/addbook", formData, {
         headers: {
-          // "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
           "x-access-token": localStorage.getItem("token"),
-        }
+        },
       });
-      const resData = await res.json();
-      if (!res.ok) {
+      console.log(res);
+      const resData = res.data;
+      if (res.status !== 201) {
         notifyOnError(resData.message);
       } else {
         notifyOnSuccess(resData.message);
-        navigate("/profile")
+        navigate("/profile");
       }
     } catch (err) {
-      console.log("Error while sending data: ", err);
+      if (err.response && err.response.data && err.response.data.message) {
+        notifyOnError(err.response.data.message);
+      } else {
+        notifyOnError(err.message);
+        console.log("Error while sending data: ", err);
+      }
     }
   };
   return (

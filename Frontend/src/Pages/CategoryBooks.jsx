@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BookCard from "../Components/BookCard";
 import SearchBar from "../Components/SearchBar";
+import axios from "../axios.js";
 
 function CategoryBooks() {
   const params = useParams();
@@ -15,16 +16,13 @@ function CategoryBooks() {
   useEffect(() => {
     const fetchCategoryBooks = async () => {
       try {
-        const res = await fetch(
-          `https://bookish-insights-production.up.railway.app/books/category/${category}`,
-          { method: "get" }
-        );
-        const data = await res.json();
-        if (res.ok) {
-          setCategoryBooks(data);
+        const res = await axios.get(`/books/category/${category}`);
+        const books = res.data;
+        if (Array.isArray(books)) {
+          setCategoryBooks(books);
         } else {
+          console.log("Expected array but received: ", books);
           setCategoryBooks([]);
-          console.log(data.message);
         }
       } catch (err) {
         console.log(err);

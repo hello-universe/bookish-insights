@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import axios from "../axios";
+import { toast } from "react-toastify";
 import BookCard from "../Components/BookCard";
 
 function ProfilePage() {
@@ -11,25 +13,33 @@ function ProfilePage() {
   const [email, setEmail] = useState("");
   const [books, setBooks] = useState([]);
 
+  const notifyOnError = (msg) => {
+    toast.error(msg);
+  };
+
+  const notifyOnSuccess = (msg) => toast.success(msg);
+
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const res = await fetch(
-          `https://bookish-insights-production.up.railway.app/users/${params.userName}`
-        );
-        const data = await res.json();
-        // console.log(data)
-        if (res.ok) {
-          setImage(data.user.image);
-          setName(data.user.name);
-          setUserName(data.user.userName);
-          setEmail(data.user.email);
-          setBooks(data.books);
+
+      try{
+        const res = await axios.get(`/users/${params.userName}`)
+        const resData = res.data
+        if(res.status === 200){
+          setImage(resData.user.image);
+          setName(resData.user.name);
+          setUserName(resData.user.userName);
+          setEmail(resData.user.email);
+          setBooks(resData.books);
         }
-      } catch (err) {
-        console.log(err);
+      }
+      catch(err){
+        if(err.response && err.response.data && err.response.data.message){
+        notifyOnError(err.response.data.message)
+        console.log(err)
       }
     };
+  }
     fetchUser();
   }, []);
   return (

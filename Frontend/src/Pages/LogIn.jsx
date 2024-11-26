@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "../axios"
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import hero_img from "../assets/undraw_books_re_8gea.svg";
@@ -36,17 +37,17 @@ function LogIn() {
       email: email.trim(),
       password: password.trim()
     }
+
     try{
-      const res = await fetch("https://bookish-insights-production.up.railway.app/login", {
-        method: "post",
+      //Format of axios: axios.post(url, data, config)
+      const res = await axios.post("/login", dataObj, {
         headers: {
           "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dataObj)
-      });
-      const resData = await res.json()
-      console.log(resData)
-      if(!res.ok){
+        }
+      })
+      const resData = res.data;
+      // console.log(resData)
+      if(res.status !== 200){
         notifyOnError(resData.message)
       }
       else{
@@ -54,9 +55,17 @@ function LogIn() {
         localStorage.setItem("token", resData.token)
         navigate("/")
       }
+      console.log(res);
     }
     catch(err){
-      console.log("Error while sending data: ",err)
+      if(err.response && err.response.data && err.response.data.message){
+        notifyOnError(err.response.data.message)
+      }
+      else{
+        console.log("Error while sending data: ",err)
+        notifyOnError("Something went wrong. Please try again later.");
+      }
+
     }
 
   };

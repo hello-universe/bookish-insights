@@ -1,11 +1,9 @@
 import React, { useContext } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { Context } from "../context/Context";
-import { useNavigate } from "react-router-dom";
 
 function Modal() {
   const { setModalOpen } = useContext(Context);
-  const navigate = useNavigate();
   return (
     <div className="modal w-screen h-screen absolute inset-0 bg-[rgba(0,0,0,0.2)]">
       <div className="container w-96 h-56 absolute shadow-lg top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-[#fff3f3] text-gray-600 p-2 flex flex-col gap-5 text-center items-center justify-center rounded-lg">

@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../axios";
 import { Context } from "../context/Context";
 
 function Header() {
@@ -40,19 +41,20 @@ function Header() {
   useEffect(() => {
     const fetchUser = async () => {
       if (token) {
-        const res = await fetch("https://bookish-insights-production.up.railway.app/user", {
-          method: "get",
-          headers: {
-            "x-access-token": token,
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          await setUser(data.user);
+
+        try {
+          const res = await axios.get("/user", {
+            headers: {
+              "x-access-token": token,
+            },
+          });
+          const resData = res.data;
+          if (res.status === 200) {
+            setUser(resData.user);
+          }
+        } catch (err) {
+          console.log(err);
         }
-        // else{
-        //   console.log(data.message)
-        // }
       }
     };
     fetchUser();

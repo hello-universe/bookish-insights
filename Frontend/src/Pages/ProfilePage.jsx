@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import axios from "../axios";
 import { Link, useNavigate } from "react-router-dom";
 import BookCard from "../Components/BookCard";
 import { Context } from "../context/Context";
@@ -15,27 +16,27 @@ function ProfilePage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      try {
-        const res = await fetch("https://bookish-insights-production.up.railway.app/profile", {
-          method: "get",
+
+      try{
+        const res = await axios.get("/profile", {
           headers: {
             "x-access-token": localStorage.getItem("token"),
-          },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setImage(data.user.image);
-          setName(data.user.name);
-          setUserName(data.user.userName);
-          setEmail(data.user.email);
-          setBooks(data.books);
-        }
-        else{
+          }
+        })
+        const resData = res.data;
+        if(res.status !== 200){
           navigate("/login")
         }
-        // console.log(data);
-      } catch (err) {
-        console.log(err);
+        else{
+          setImage(resData.user.image);
+          setName(resData.user.name);
+          setUserName(resData.user.userName);
+          setEmail(resData.user.email);
+          setBooks(resData.books);
+        }
+      }
+      catch(err){
+        console.log(err)
       }
     };
     fetchProfile();

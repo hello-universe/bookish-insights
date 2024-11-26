@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "../axios";
 import Rating from "../Components/Rating";
 import Review from "../Components/Review";
 
@@ -27,9 +28,9 @@ function EachBook() {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const res = await fetch(`https://bookish-insights-production.up.railway.app/books/${params.bookId}`);
-        const data = await res.json();
-        if (res.ok) {
+        const res = await axios.get(`/books/${params.bookId}`);
+        const data = res.data;
+        if (res.status == 200) {
           setName(data.name);
           setAuthor(data.author);
           setImage(data.image);
@@ -39,13 +40,6 @@ function EachBook() {
           setDescription(data.description);
           setAddedBy(data.addedBy.userName);
           setReviews(data.reviews);
-          //Check if user has already rated the book
-          // if (user) {
-          //   const hasRated = data.ratings.find(
-          //     (rating) => rating.user === user._id
-          //   );
-          //   setRated(hasRated);
-          // }
         }
       } catch (err) {
         console.log(err);
@@ -56,78 +50,81 @@ function EachBook() {
 
   // Handle rating submission
   const handleRate = async (rating) => {
-    // console.log(`Rated with ${rating} stars`);
-    // Handle the rating submission here, e.g., send it to the backend
-
-    // Check if user is logged in
-    // if (!user) {
-    //   notifyOnError("Please login to rate this book.");
-    //   navigate("/login");
-    //   return;
-    // }
     try {
-      const res = await fetch(
-        `https://bookish-insights-production.up.railway.app/books/${params.bookId}/rate`,
+      //Format of axios.put
+      //axios.put(url, data, config)
+      const res = await axios.put(
+        `/books/${params.bookId}/rate`,
+        { rating }, // The payload for the request
+        //Axios takes care of converting JavaScript objects into JSON strings for you. When you pass an object like { rating } to Axios,
+        //it internally applies JSON.stringify() if the Content-Type header is application/json.
         {
-          method: "put",
           headers: {
             "x-access-token": localStorage.getItem("token"),
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            rating: rating,
-          }),
         }
       );
-      const data = await res.json();
-      // console.log(res);
-      // console.log(data);
-      //This condition arises when the either the token present in local storage is invalid or the user is not found
-      if (res.ok) {
-        notifyOnSuccess(data.message);
-      } else {
-        notifyOnError(data.message);
+      // Check the response and handle it
+      if (res.status !== 200) {
+        notifyOnError(res);
         navigate("/login");
+      } else {
+        notifyOnSuccess(res.data.message);
+        location.reload();
       }
+    //In axios if the request is not ok then it will throw an error and all the responses(like error messages sent from backend) will be
+    //in the err object inside err.response.data
     } catch (err) {
-      console.log(err);
-      notifyOnError("Something went wrong. Please try again later.");
+      if (err.response && err.response.data && err.response.data.message) {
+        notifyOnError(err.response.data.message);
+        if (err.response.status === 401) {
+          navigate("/login"); // Redirect to login if unauthorized
+        }
+      } else {
+        console.log(err);
+        notifyOnError("Something went wrong. Please try again later.");
+      }
     }
   };
 
   // Handle review submission
   const handleReview = async () => {
-    // Check if user is logged in
-    // if (!user) {
-    //   notifyOnError("Please login to give a review.");
-    //   navigate("/login");
-    //   return;
-    // }
     try {
-      const res = await fetch(
-        `https://bookish-insights-production.up.railway.app/books/${params.bookId}/review`,
+      const res = await axios.put(
+        `/books/${params.bookId}/review`,
         {
-          method: "put",
+          review: userReview.trim(), // Payload for the request
+        },
+        {
           headers: {
             "x-access-token": localStorage.getItem("token"),
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            review: userReview.trim(),
-          }),
         }
       );
-      const data = await res.json();
-      if (res.ok) {
-        notifyOnSuccess(data.message);
+      // console.log(res); //Will not be printed because it will be handled by the catch block
+      // Axios stores response data in `res.data`
+      if (res.status === 200) {
+        notifyOnSuccess(res.data.message);
+        location.reload();
       } else {
-        notifyOnError(data.message);
+        notifyOnError(res.data.message);
         navigate("/login");
       }
     } catch (err) {
-      console.log(err);
+      if (err.response && err.response.data && err.response.data.message) {
+        notifyOnError(err.response.data.message);
+        if (err.response.status === 401) {
+          navigate("/login"); // Redirect to login if unauthorized
+        }
+      } else {
+        console.log(err);
+        notifyOnError("Something went wrong. Please try again later.");
+      }
     }
   };
+
   return (
     <div className="container flex flex-col gap-10 w-full">
       <div className="info w-full flex flex-col gap-8 items-center md:items-start  md:flex-row">
@@ -185,9 +182,7 @@ function EachBook() {
         <p className="text-lg text-gray-800">{description}</p>
       </div>
       <div className="give-rating">
-        <h2 className="text-2xl font-medium mb-2">
-          Rate this book
-        </h2>
+        <h2 className="text-2xl font-medium mb-2">Rate this book</h2>
         <Rating onRate={handleRate} />
       </div>
 
