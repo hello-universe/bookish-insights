@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -21,14 +21,14 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '6.9.1'
+          node-version: '22.x'
 
       - name: npm install, build, and test
         run: |
           npm install
           npm run build --if-present
           npm run test --if-present
-      
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -51,13 +51,13 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_635220C849374B41B396278976C561AF }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B2775326A3644400A566232D842E53F2 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CA4C99A655914611B21883381112AC55 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8D1C2B754DB54CE08CAD5D48612D3B8A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2F7461BA624E459B8144E97312B2BB44 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C14FF009657849D3A22208ABEFF4F1AD }}
 
       - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'node-backend-web-app'
           slot-name: 'Production'
